@@ -79,7 +79,7 @@ public class MyGame extends VariableFrameRateGame {
 		AvatarMoveAction avatarBckAction = new AvatarMoveAction(this, 0.05f, false);
 		AvatarTurnAction dolphinLeft = new AvatarTurnAction(this, 0.01f, true);
 		AvatarTurnAction dolphinRight = new AvatarTurnAction(this, 0.01f, false);
-		RideDolphinAction rideDolphinAction = new RideDolphinAction(this);
+		RideDolphinAction rideDolphinAction = new RideDolphinAction(this, MyDolphin.dol, MyPlayer.player);
 
 		im.associateActionWithAllKeyboards(
 				net.java.games.input.Component.Identifier.Key.W, avatarFwdAction,
@@ -105,8 +105,8 @@ public class MyGame extends VariableFrameRateGame {
 		elapsedTime = 0.0;
 		onDolphin = false;
 		engine.getRenderSystem().setWindowDimensions(1900, 1000);
-		engine.getRenderSystem().getViewport("MAIN").getCamera().setLocation(new Vector3f(0, 0, 5));
 		cam = engine.getRenderSystem().getViewport("MAIN").getCamera();
+		cam.setLocation(new Vector3f(0, 0, 5));
 		initInputs();
 	}
 
@@ -138,6 +138,10 @@ public class MyGame extends VariableFrameRateGame {
 		cam.setU(right);
 		cam.setV(up);
 		cam.setN(fwd);
-		cam.setLocation(loc.add(up.mul(1.3f)).add(fwd.mul(-2.5f)));
+		if (onDolphin) {
+			cam.setLocation(loc.add(up.mul(1.3f)).add(fwd.mul(-2.5f)));
+		} else {
+			cam.setLocation(loc);
+		}
 	}
 }
