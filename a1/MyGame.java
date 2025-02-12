@@ -19,6 +19,9 @@ public class MyGame extends VariableFrameRateGame {
 	private final MySatellite satellite3;
 	Camera cam;
 
+	TextureImage satellite;
+	TextureImage closeEnough;
+
 	public MyGame() {
 		super();
 		myDolphin = new MyDolphin();
@@ -47,11 +50,12 @@ public class MyGame extends VariableFrameRateGame {
 
 	@Override
 	public void loadTextures() {
+		satellite = new TextureImage("Satellite.jpg");
+		closeEnough = new TextureImage("CloseEnough.jpg");
 		myDolphin.loadTexture();
-		TextureImage brickTexture = new TextureImage("brick1.jpg");
-		satellite1.loadTexture(brickTexture);
-		satellite2.loadTexture(brickTexture);
-		satellite3.loadTexture(brickTexture);
+		satellite1.loadTexture(satellite);
+		satellite2.loadTexture(satellite);
+		satellite3.loadTexture(satellite);
 	}
 
 	@Override
@@ -94,7 +98,7 @@ public class MyGame extends VariableFrameRateGame {
 				net.java.games.input.Component.Identifier.Key.D, dolphinRight,
 				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		im.associateActionWithAllKeyboards(
-				net.java.games.input.Component.Identifier.Key.E, rideDolphinAction,
+				net.java.games.input.Component.Identifier.Key.SPACE, rideDolphinAction,
 				InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
 	}
 
@@ -119,6 +123,21 @@ public class MyGame extends VariableFrameRateGame {
 		myDolphin.update(deltaTime);
 		im.update((float)elapsedTime);
 		updateCamera();
+		if (MyPlayer.player.getLocalLocation().distance(satellite1.satellite.getLocalLocation()) < 3.0f) {
+			satellite1.updateTexture(closeEnough);
+		} else {
+			satellite1.updateTexture(satellite);
+		}
+		if (MyPlayer.player.getLocalLocation().distance(satellite2.satellite.getLocalLocation()) < 3.0f) {
+			satellite2.updateTexture(closeEnough);
+		} else {
+			satellite2.updateTexture(satellite);
+		}
+		if (MyPlayer.player.getLocalLocation().distance(satellite3.satellite.getLocalLocation()) < 3.0f) {
+			satellite3.updateTexture(closeEnough);
+		} else {
+			satellite3.updateTexture(satellite);
+		}
 	}
 
 	private void updateCamera() {

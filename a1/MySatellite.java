@@ -5,6 +5,8 @@ import tage.GameObject;
 import tage.ObjShape;
 import tage.TextureImage;
 
+import java.util.Objects;
+
 public class MySatellite {
     ObjShape obj;
     TextureImage texture;
@@ -28,5 +30,12 @@ public class MySatellite {
         initialScale = (new Matrix4f()).scaling(scale);
         satellite.setLocalTranslation(initialTranslation);
         satellite.setLocalScale(initialScale);
+    }
+
+    void updateTexture(TextureImage texture) {
+        if (!Objects.equals(this.texture.getTextureFile(), texture.getTextureFile())) {
+            this.texture = texture;
+            satellite.setTextureImage(texture);
+        }
     }
 }
