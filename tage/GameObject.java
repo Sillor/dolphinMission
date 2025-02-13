@@ -230,6 +230,34 @@ public class GameObject
 		localRotation.setColumn(2, new Vector4f(fwd, 0f));
 		update();
 	}
+
+	/** Rotates the object around its own y-axis */
+	public void localYaw(float angle)
+	{	localRotation.rotateY(angle);
+		update();
+	}
+
+	/** Rotates the object around its own x-axis */
+	public void localPitch(float angle)
+	{	localRotation.rotateX(angle);
+		update();
+	}
+
+	/** Moves the object forward **/
+	public void moveForward(float distance)
+	{	Vector3f forward = getLocalForwardVector();
+		forward.mul(distance);
+		localTranslation.translate(forward);
+		update();
+	}
+
+	/** Moves the object backward **/
+	public void moveBackward(float distance)
+	{	Vector3f forward = getLocalForwardVector();
+		forward.mul(-distance);
+		localTranslation.translate(forward);
+		update();
+	}
 	
 	// ------------ SCENE GRAPH TRAVERSAL for MATRICES -----------------
 

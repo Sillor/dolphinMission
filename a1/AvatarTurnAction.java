@@ -19,14 +19,6 @@ public class AvatarTurnAction extends AbstractInputAction {
     @Override
     public void performAction(float time, Event e) {
         GameObject av = game.getAvatar();
-        Matrix4f oldRotation = new Matrix4f(av.getWorldRotation());
-        Vector3f oldUp = av.getWorldUpVector();
-
-        float rotationAmount = isLeftTurn ? speed : -speed;
-        Matrix4fc rotAroundAvatarUp = new Matrix4f().rotation(rotationAmount,
-                new Vector3f(oldUp.x(), oldUp.y(), oldUp.z()));
-
-        oldRotation.mul(rotAroundAvatarUp);
-        av.setLocalRotation(oldRotation);
+        av.localYaw(isLeftTurn ? speed : -speed);
     }
 }

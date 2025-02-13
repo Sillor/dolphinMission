@@ -8,25 +8,22 @@ import tage.input.action.AbstractInputAction;
 
 public class AvatarMoveAction extends AbstractInputAction {
     private final MyGame game;
-    private final float speed;
+    private final float distance;
     private final boolean forward;
 
-    public AvatarMoveAction(MyGame g, float speed, boolean forward) {
+    public AvatarMoveAction(MyGame g, float distance, boolean forward) {
         this.game = g;
-        this.speed = speed;
+        this.distance = distance;
         this.forward = forward;
     }
 
     @Override
     public void performAction(float time, Event e) {
         GameObject av = game.getAvatar();
-        Vector3f oldPosition = av.getWorldLocation();
-        Vector4f movementDirection = new Vector4f(0f, 0f, 1f, 1f);
-        movementDirection.mul(av.getWorldRotation());
-        movementDirection.mul(forward ? speed : -speed);
-        Vector3f newPosition = oldPosition.add(movementDirection.x(),
-                movementDirection.y(),
-                movementDirection.z());
-        av.setLocalLocation(newPosition);
+        if (forward) {
+            av.moveForward(distance);
+        } else {
+            av.moveBackward(distance);
+        }
     }
 }
