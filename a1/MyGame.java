@@ -2,6 +2,7 @@ package a1;
 
 import tage.*;
 import tage.input.InputManager;
+import tage.input.action.AbstractInputAction;
 import tage.shapes.*;
 import org.joml.*;
 
@@ -19,8 +20,14 @@ public class MyGame extends VariableFrameRateGame {
 	private final MySatellite satellite3;
 	Camera cam;
 
+	Line linxS;
+	Line linyS;
+	Line linzS;
+
 	TextureImage satellite;
-	TextureImage closeEnough;
+	TextureImage close;
+	TextureImage detonated;
+	TextureImage disarmed;
 
 	public MyGame() {
 		super();
@@ -46,16 +53,23 @@ public class MyGame extends VariableFrameRateGame {
 		satellite1.loadShape(new Cube());
 		satellite2.loadShape(new Sphere());
 		satellite3.loadShape(new Torus());
+
+		linxS = new Line(new Vector3f(0f,0f,0f), new Vector3f(3f,0f,0f));
+		linyS = new Line(new Vector3f(0f,0f,0f), new Vector3f(0f,3f,0f));
+		linzS = new Line(new Vector3f(0f,0f,0f), new Vector3f(0f,0f,-3f));
 	}
 
 	@Override
 	public void loadTextures() {
-		satellite = new TextureImage("Satellite.jpg");
-		closeEnough = new TextureImage("CloseEnough.jpg");
+		satellite = new TextureImage("satellite.jpg");
+		close = new TextureImage("close.jpg");
+		detonated = new TextureImage("explosion.jpg");
+		disarmed = new TextureImage("emoji.jpg");
+
 		myDolphin.loadTexture();
-		satellite1.loadTexture(satellite);
-		satellite2.loadTexture(satellite);
-		satellite3.loadTexture(satellite);
+		satellite1.loadTexture(satellite, close, disarmed, detonated);
+		satellite2.loadTexture(satellite, close, disarmed, detonated);
+		satellite3.loadTexture(satellite, close, disarmed, detonated);
 	}
 
 	@Override
@@ -67,6 +81,14 @@ public class MyGame extends VariableFrameRateGame {
 		satellite1.buildObject(-distance, 0, -distance, 0.5f);
 		satellite2.buildObject(distance, 0, -distance, 1.0f);
 		satellite3.buildObject(0, 0, distance, 1.5f);
+
+		// add X,Y,-Z axes
+		GameObject x = new GameObject(GameObject.root(), linxS);
+		GameObject y = new GameObject(GameObject.root(), linyS);
+		GameObject z = new GameObject(GameObject.root(), linzS);
+		(x.getRenderStates()).setColor(new Vector3f(1f,0f,0f));
+		(y.getRenderStates()).setColor(new Vector3f(0f,1f,0f));
+		(z.getRenderStates()).setColor(new Vector3f(0f,0f,1f));
 	}
 
 	@Override
@@ -79,35 +101,30 @@ public class MyGame extends VariableFrameRateGame {
 
 	private void initInputs() {
 		im = engine.getInputManager();
-		AvatarMoveAction avatarFwdAction = new AvatarMoveAction(this, 0.05f, true);
-		AvatarMoveAction avatarBckAction = new AvatarMoveAction(this, 0.05f, false);
-		AvatarTurnAction dolphinLeft = new AvatarTurnAction(this, 0.03f, true);
-		AvatarTurnAction dolphinRight = new AvatarTurnAction(this, 0.03f, false);
-		RideDolphinAction rideDolphinAction = new RideDolphinAction(this, MyDolphin.dol, MyPlayer.player);
-		AvatarRotateAction dolphinUp = new AvatarRotateAction(this, 0.01f, true);
-		AvatarRotateAction dolphinDown = new AvatarRotateAction(this, 0.01f, false);
 
-		im.associateActionWithAllKeyboards(
-				net.java.games.input.Component.Identifier.Key.W, avatarFwdAction,
-				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		im.associateActionWithAllKeyboards(
-				net.java.games.input.Component.Identifier.Key.S, avatarBckAction,
-				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		im.associateActionWithAllKeyboards(
-				net.java.games.input.Component.Identifier.Key.A, dolphinLeft,
-				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		im.associateActionWithAllKeyboards(
-				net.java.games.input.Component.Identifier.Key.D, dolphinRight,
-				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		im.associateActionWithAllKeyboards(
-				net.java.games.input.Component.Identifier.Key.UP, dolphinUp,
-				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		im.associateActionWithAllKeyboards(
-				net.java.games.input.Component.Identifier.Key.DOWN, dolphinDown,
-				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		im.associateActionWithAllKeyboards(
-				net.java.games.input.Component.Identifier.Key.SPACE, rideDolphinAction,
-				InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
+		// Movement actions
+		AvatarMoveAction moveForward = new AvatarMoveAction(this, 0.05f, true);
+		AvatarMoveAction moveBackward = new AvatarMoveAction(this, 0.05f, false);
+		AvatarTurnAction turnLeft = new AvatarTurnAction(this, 0.03f, true);
+		AvatarTurnAction turnRight = new AvatarTurnAction(this, 0.03f, false);
+		AvatarRotateAction rotateUp = new AvatarRotateAction(this, 0.01f, true);
+		AvatarRotateAction rotateDown = new AvatarRotateAction(this, 0.01f, false);
+
+		// Special action
+		RideDolphinAction rideDolphin = new RideDolphinAction(this, MyDolphin.dol, MyPlayer.player);
+
+		// Key bindings
+		associateKeyAction(net.java.games.input.Component.Identifier.Key.W, moveForward, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(net.java.games.input.Component.Identifier.Key.S, moveBackward, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(net.java.games.input.Component.Identifier.Key.A, turnLeft, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(net.java.games.input.Component.Identifier.Key.D, turnRight, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(net.java.games.input.Component.Identifier.Key.UP, rotateUp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(net.java.games.input.Component.Identifier.Key.DOWN, rotateDown, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(net.java.games.input.Component.Identifier.Key.SPACE, rideDolphin, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
+	}
+
+	private void associateKeyAction(net.java.games.input.Component.Identifier.Key key, AbstractInputAction action, InputManager.INPUT_ACTION_TYPE type) {
+		im.associateActionWithAllKeyboards(key, action, type);
 	}
 
 	@Override
@@ -131,7 +148,7 @@ public class MyGame extends VariableFrameRateGame {
 		myDolphin.update(deltaTime);
 		im.update((float)elapsedTime);
 		updateCamera();
-		updateSatelliteTextures();
+		updateSatelliteStates();
 		updatePlayerCoords();
 	}
 
@@ -141,23 +158,25 @@ public class MyGame extends VariableFrameRateGame {
 		}
 	}
 
-	private void updateSatelliteTextures() {
-		if (MyPlayer.player.getLocalLocation().distance(satellite1.satellite.getLocalLocation()) < 3.0f) {
-			satellite1.updateTexture(closeEnough);
-		} else {
-			satellite1.updateTexture(satellite);
-		}
-		if (MyPlayer.player.getLocalLocation().distance(satellite2.satellite.getLocalLocation()) < 3.0f) {
-			satellite2.updateTexture(closeEnough);
-		} else {
-			satellite2.updateTexture(satellite);
-		}
-		if (MyPlayer.player.getLocalLocation().distance(satellite3.satellite.getLocalLocation()) < 3.0f) {
-			satellite3.updateTexture(closeEnough);
-		} else {
-			satellite3.updateTexture(satellite);
+	private void updateSatelliteStates() {
+		MySatellite[] satellites = {satellite1, satellite2, satellite3};
+		float playerDistance;
+
+		for (MySatellite satellite : satellites) {
+			playerDistance = MyPlayer.player.getLocalLocation().distance(satellite.satellite.getLocalLocation());
+
+			if (playerDistance < 2.0f) {
+				if (!satellite.isDisarmed()) {
+					satellite.setDetonated(onDolphin && !satellite.isDetonated());
+					satellite.setDisarmed(!onDolphin);
+				}
+			}
+			satellite.setClose(playerDistance < 4.0f);
+
+			satellite.updateTexture();
 		}
 	}
+
 
 	private void updateCamera() {
 		cam = engine.getRenderSystem().getViewport("MAIN").getCamera();
