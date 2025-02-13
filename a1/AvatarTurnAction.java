@@ -20,7 +20,7 @@ public class AvatarTurnAction extends AbstractInputAction {
     public void performAction(float time, Event e) {
         GameObject av = game.getAvatar();
         Matrix4f oldRotation = new Matrix4f(av.getWorldRotation());
-        Vector4f oldUp = new Vector4f(0f, 1f, 0f, 1f).mul(oldRotation);
+        Vector3f oldUp = av.getWorldUpVector();
 
         float rotationAmount = isLeftTurn ? speed : -speed;
         Matrix4fc rotAroundAvatarUp = new Matrix4f().rotation(rotationAmount,

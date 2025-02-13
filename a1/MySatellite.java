@@ -34,6 +34,7 @@ public class MySatellite {
 
     void updateTexture(TextureImage texture) {
         if (!Objects.equals(this.texture.getTextureFile(), texture.getTextureFile())) {
+            System.out.println("here");
             this.texture = texture;
             satellite.setTextureImage(texture);
         }

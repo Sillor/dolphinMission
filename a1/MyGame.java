@@ -81,9 +81,11 @@ public class MyGame extends VariableFrameRateGame {
 		im = engine.getInputManager();
 		AvatarMoveAction avatarFwdAction = new AvatarMoveAction(this, 0.05f, true);
 		AvatarMoveAction avatarBckAction = new AvatarMoveAction(this, 0.05f, false);
-		AvatarTurnAction dolphinLeft = new AvatarTurnAction(this, 0.01f, true);
-		AvatarTurnAction dolphinRight = new AvatarTurnAction(this, 0.01f, false);
+		AvatarTurnAction dolphinLeft = new AvatarTurnAction(this, 0.03f, true);
+		AvatarTurnAction dolphinRight = new AvatarTurnAction(this, 0.03f, false);
 		RideDolphinAction rideDolphinAction = new RideDolphinAction(this, MyDolphin.dol, MyPlayer.player);
+		AvatarRotateAction dolphinUp = new AvatarRotateAction(this, 0.01f, true);
+		AvatarRotateAction dolphinDown = new AvatarRotateAction(this, 0.01f, false);
 
 		im.associateActionWithAllKeyboards(
 				net.java.games.input.Component.Identifier.Key.W, avatarFwdAction,
@@ -96,6 +98,12 @@ public class MyGame extends VariableFrameRateGame {
 				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		im.associateActionWithAllKeyboards(
 				net.java.games.input.Component.Identifier.Key.D, dolphinRight,
+				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		im.associateActionWithAllKeyboards(
+				net.java.games.input.Component.Identifier.Key.UP, dolphinUp,
+				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		im.associateActionWithAllKeyboards(
+				net.java.games.input.Component.Identifier.Key.DOWN, dolphinDown,
 				InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		im.associateActionWithAllKeyboards(
 				net.java.games.input.Component.Identifier.Key.SPACE, rideDolphinAction,
@@ -123,6 +131,10 @@ public class MyGame extends VariableFrameRateGame {
 		myDolphin.update(deltaTime);
 		im.update((float)elapsedTime);
 		updateCamera();
+		updateSatelliteTextures();
+	}
+
+	private void updateSatelliteTextures() {
 		if (MyPlayer.player.getLocalLocation().distance(satellite1.satellite.getLocalLocation()) < 3.0f) {
 			satellite1.updateTexture(closeEnough);
 		} else {
