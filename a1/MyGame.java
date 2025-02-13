@@ -132,6 +132,13 @@ public class MyGame extends VariableFrameRateGame {
 		im.update((float)elapsedTime);
 		updateCamera();
 		updateSatelliteTextures();
+		updatePlayerCoords();
+	}
+
+	private void updatePlayerCoords() {
+		if (onDolphin) {
+			MyPlayer.player.setLocalLocation(MyDolphin.dol.getLocalLocation());
+		}
 	}
 
 	private void updateSatelliteTextures() {
