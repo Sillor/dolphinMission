@@ -6,6 +6,8 @@ import tage.input.InputManager;
 import tage.input.action.AbstractInputAction;
 import tage.shapes.*;
 import org.joml.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class MyGame extends VariableFrameRateGame {
 	private static Engine engine;
@@ -67,22 +69,50 @@ public class MyGame extends VariableFrameRateGame {
 
 	@Override
 	public void buildObjects() {
-		myPlayer.buildObject(3.0f,0,0,1.0f);
-		myDolphin.buildObject(0,0,0,3.0f);
+		myPlayer.buildObject(3.0f, 0, 0, 1.0f);
+		myDolphin.buildObject(0, 0, 0, 3.0f);
 
-		float distance = 10.0f;
-		satellite1.buildObject(-distance, 0, -distance, 0.5f);
-		satellite2.buildObject(distance, 0, -distance, 1.0f);
-		satellite3.buildObject(0, 0, distance, 1.5f);
+		float maxDistance = 25.0f;
+		int numSatellites = 3;
+		ArrayList<Vector3f> satellitePositions = new ArrayList<>();
+		Random random = new Random();
 
-		// add X,Y,-Z axes
+		for (int i = 0; i < numSatellites; i++) {
+			Vector3f newPosition;
+			boolean collision;
+
+			do {
+				float x = (random.nextFloat() * 2 - 1) * maxDistance;
+				float y = (random.nextFloat() * 2 - 1) * maxDistance;
+				float z = (random.nextFloat() * 2 - 1) * maxDistance;
+				newPosition = new Vector3f(x, y, z);
+
+				collision = false;
+				for (Vector3f pos : satellitePositions) {
+					if (newPosition.distance(pos) < 2.0f) { // Ensuring no collision
+						collision = true;
+						break;
+					}
+				}
+			} while (collision);
+
+			satellitePositions.add(newPosition);
+		}
+
+		// Assign positions to satellites
+		satellite1.buildObject(satellitePositions.get(0).x, satellitePositions.get(0).y, satellitePositions.get(0).z, 0.5f);
+		satellite2.buildObject(satellitePositions.get(1).x, satellitePositions.get(1).y, satellitePositions.get(1).z, 1.0f);
+		satellite3.buildObject(satellitePositions.get(2).x, satellitePositions.get(2).y, satellitePositions.get(2).z, 1.5f);
+
+		// Add X, Y, -Z axes
 		GameObject x = new GameObject(GameObject.root(), linxS);
 		GameObject y = new GameObject(GameObject.root(), linyS);
 		GameObject z = new GameObject(GameObject.root(), linzS);
-		(x.getRenderStates()).setColor(new Vector3f(1f,0f,0f));
-		(y.getRenderStates()).setColor(new Vector3f(0f,1f,0f));
-		(z.getRenderStates()).setColor(new Vector3f(0f,0f,1f));
+		(x.getRenderStates()).setColor(new Vector3f(1f, 0f, 0f));
+		(y.getRenderStates()).setColor(new Vector3f(0f, 1f, 0f));
+		(z.getRenderStates()).setColor(new Vector3f(0f, 0f, 1f));
 	}
+
 
 	@Override
 	public void initializeLights() {
