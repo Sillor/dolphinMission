@@ -1,8 +1,6 @@
 package a1;
 
 import net.java.games.input.Event;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 import tage.GameObject;
 import tage.input.action.AbstractInputAction;
 
@@ -21,9 +19,9 @@ public class AvatarMoveAction extends AbstractInputAction {
     public void performAction(float time, Event e) {
         GameObject av = game.getAvatar();
         if (forward) {
-            av.moveForward(distance);
+            av.moveForward(game.onDolphin ? distance * 3 : distance);
         } else {
-            av.moveBackward(distance);
+            av.moveBackward(game.onDolphin ? distance * 3 : distance);
         }
     }
 }

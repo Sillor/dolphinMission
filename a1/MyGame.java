@@ -95,13 +95,16 @@ public class MyGame extends VariableFrameRateGame {
 	private void initInputs() {
 		im = engine.getInputManager();
 
+		float moveSpeed = 0.05f;
+		float turnSpeed = 0.03f;
+
 		// Movement actions
-		AvatarMoveAction moveForward = new AvatarMoveAction(this, 0.05f, true);
-		AvatarMoveAction moveBackward = new AvatarMoveAction(this, 0.05f, false);
-		AvatarTurnAction turnLeft = new AvatarTurnAction(this, 0.03f, true);
-		AvatarTurnAction turnRight = new AvatarTurnAction(this, 0.03f, false);
-		AvatarRotateAction rotateUp = new AvatarRotateAction(this, 0.01f, true);
-		AvatarRotateAction rotateDown = new AvatarRotateAction(this, 0.01f, false);
+		AvatarMoveAction moveForward = new AvatarMoveAction(this, moveSpeed, true);
+		AvatarMoveAction moveBackward = new AvatarMoveAction(this, moveSpeed, false);
+		AvatarTurnAction turnLeft = new AvatarTurnAction(this, turnSpeed, true);
+		AvatarTurnAction turnRight = new AvatarTurnAction(this, turnSpeed, false);
+		AvatarRotateAction rotateUp = new AvatarRotateAction(this, turnSpeed, true);
+		AvatarRotateAction rotateDown = new AvatarRotateAction(this, turnSpeed, false);
 
 		// Special action
 		RideDolphinAction rideDolphin = new RideDolphinAction(this, MyDolphin.dol, MyPlayer.player);
@@ -155,8 +158,8 @@ public class MyGame extends VariableFrameRateGame {
 			playerDistance = MyPlayer.player.getLocalLocation().distance(satellite.satellite.getLocalLocation());
 
 			if (playerDistance < 2.0f) {
-				if (!satellite.isDisarmed()) {
-					satellite.setDetonated(onDolphin && !satellite.isDetonated());
+				if (!satellite.isDisarmed() && !satellite.isDetonated()) {
+					satellite.setDetonated(onDolphin);
 					satellite.setDisarmed(!onDolphin);
 				}
 			}
