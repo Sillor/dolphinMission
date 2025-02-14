@@ -1,5 +1,6 @@
 package a1;
 
+import net.java.games.input.Component;
 import tage.*;
 import tage.input.InputManager;
 import tage.input.action.AbstractInputAction;
@@ -8,26 +9,18 @@ import org.joml.*;
 
 public class MyGame extends VariableFrameRateGame {
 	private static Engine engine;
-	private double lastFrameTime;
-	private double currFrameTime;
-	private double elapsedTime;
+	private double lastFrameTime, currFrameTime, elapsedTime;
 	private InputManager im;
 	public boolean onDolphin;
 	private final MyPlayer myPlayer;
     private final MyDolphin myDolphin;
-	private final MySatellite satellite1;
-	private final MySatellite satellite2;
-	private final MySatellite satellite3;
+	private final MySatellite satellite1, satellite2, satellite3;
+
 	Camera cam;
 
-	Line linxS;
-	Line linyS;
-	Line linzS;
+	Line linxS, linyS, linzS;
 
-	TextureImage satellite;
-	TextureImage close;
-	TextureImage detonated;
-	TextureImage disarmed;
+	TextureImage satellite, close, detonated, disarmed;
 
 	public MyGame() {
 		super();
@@ -114,16 +107,16 @@ public class MyGame extends VariableFrameRateGame {
 		RideDolphinAction rideDolphin = new RideDolphinAction(this, MyDolphin.dol, MyPlayer.player);
 
 		// Key bindings
-		associateKeyAction(net.java.games.input.Component.Identifier.Key.W, moveForward, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(net.java.games.input.Component.Identifier.Key.S, moveBackward, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(net.java.games.input.Component.Identifier.Key.A, turnLeft, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(net.java.games.input.Component.Identifier.Key.D, turnRight, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(net.java.games.input.Component.Identifier.Key.UP, rotateUp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(net.java.games.input.Component.Identifier.Key.DOWN, rotateDown, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(net.java.games.input.Component.Identifier.Key.SPACE, rideDolphin, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
+		associateKeyAction(Component.Identifier.Key.W, moveForward, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.S, moveBackward, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.A, turnLeft, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.D, turnRight, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.UP, rotateUp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.DOWN, rotateDown, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.SPACE, rideDolphin, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
 	}
 
-	private void associateKeyAction(net.java.games.input.Component.Identifier.Key key, AbstractInputAction action, InputManager.INPUT_ACTION_TYPE type) {
+	private void associateKeyAction(Component.Identifier.Key key, AbstractInputAction action, InputManager.INPUT_ACTION_TYPE type) {
 		im.associateActionWithAllKeyboards(key, action, type);
 	}
 
@@ -152,11 +145,7 @@ public class MyGame extends VariableFrameRateGame {
 		updatePlayerCoords();
 	}
 
-	private void updatePlayerCoords() {
-		if (onDolphin) {
-			MyPlayer.player.setLocalLocation(MyDolphin.dol.getLocalLocation());
-		}
-	}
+	private void updatePlayerCoords() { if (onDolphin) MyPlayer.player.setLocalLocation(MyDolphin.dol.getLocalLocation()); }
 
 	private void updateSatelliteStates() {
 		MySatellite[] satellites = {satellite1, satellite2, satellite3};
@@ -181,17 +170,12 @@ public class MyGame extends VariableFrameRateGame {
 	private void updateCamera() {
 		cam = engine.getRenderSystem().getViewport("MAIN").getCamera();
 		Vector3f loc, fwd, up, right;
-		if (onDolphin) {
-			loc = myDolphin.getLocation();
-			fwd = myDolphin.getForwardVector();
-			up = myDolphin.getUpVector();
-			right = myDolphin.getRightVector();
-		} else {
-			loc = myPlayer.getLocation();
-			fwd = myPlayer.getForwardVector();
-			up = myPlayer.getUpVector();
-			right = myPlayer.getRightVector();
-		}
+
+		loc = onDolphin ? myDolphin.getLocation() : myPlayer.getLocation();
+		fwd = onDolphin ? myDolphin.getForwardVector() : myPlayer.getForwardVector();
+		up = onDolphin ? myDolphin.getUpVector() : myPlayer.getUpVector();
+		right = onDolphin ? myDolphin.getRightVector() : myPlayer.getRightVector();
+
 		cam.setU(right);
 		cam.setV(up);
 		cam.setN(fwd);
