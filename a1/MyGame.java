@@ -90,10 +90,32 @@ public class MyGame extends VariableFrameRateGame {
 
 	@Override
 	public void initializeLights() {
-		Light.setGlobalAmbient(0.5f, 0.5f, 0.5f);
-        Light light1 = new Light();
-		light1.setLocation(new Vector3f(5.0f, 4.0f, 2.0f));
+		Light.setGlobalAmbient(0.4f, 0.4f, 0.4f);
+
+		Light light1 = new Light();
+		Light light2 = new Light();
+		Light light3 = new Light();
+
+		Vector3f offset = new Vector3f(0.0f, 2.0f, 0.0f);
+
+		light1.setLocation(satellite1.satellite.getLocalLocation().add(offset));
+		light1.setAmbient(0.1f, 0.02f, 0.02f);
+		light1.setDiffuse(0.8f, 0.25f, 0.25f);
+		light1.setSpecular(0.5f, 0.15f, 0.15f);
+
+		light2.setLocation(satellite2.satellite.getLocalLocation().add(offset));
+		light2.setAmbient(0.02f, 0.1f, 0.02f);
+		light2.setDiffuse(0.25f, 0.8f, 0.25f);
+		light2.setSpecular(0.15f, 0.5f, 0.15f);
+
+		light3.setLocation(satellite3.satellite.getLocalLocation().add(offset));
+		light3.setAmbient(0.02f, 0.02f, 0.1f);
+		light3.setDiffuse(0.25f, 0.25f, 0.8f);
+		light3.setSpecular(0.15f, 0.15f, 0.5f);
+
 		engine.getSceneGraph().addLight(light1);
+		engine.getSceneGraph().addLight(light2);
+		engine.getSceneGraph().addLight(light3);
 	}
 
 	private void initInputs() {
