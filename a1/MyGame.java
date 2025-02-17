@@ -75,7 +75,6 @@ public class MyGame extends VariableFrameRateGame {
 	public void buildObjects() {
 		myPlayer.buildObject(3.0f,0,0,1.0f);
 		myDolphin.buildObject(0,0,0,3.0f);
-\
 		satellite1.buildObject(0.5f, 10, 10);
 		satellite2.buildObject(1.0f, 10, 10);
 		satellite3.buildObject(1.5f, 10, 10);
@@ -104,8 +103,8 @@ public class MyGame extends VariableFrameRateGame {
 		float turnSpeed = 1.0f;
 
 		// Movement actions
-		AvatarMoveAction moveForward = new AvatarMoveAction(this, moveSpeed, true);
-		AvatarMoveAction moveBackward = new AvatarMoveAction(this, moveSpeed, false);
+		AvatarMoveAction moveForward = new AvatarMoveAction(this, moveSpeed, true, MyDolphin.dol);
+		AvatarMoveAction moveBackward = new AvatarMoveAction(this, moveSpeed, false, MyDolphin.dol);
 		AvatarTurnAction turnLeft = new AvatarTurnAction(this, turnSpeed, true);
 		AvatarTurnAction turnRight = new AvatarTurnAction(this, turnSpeed, false);
 		AvatarRotateAction rotateUp = new AvatarRotateAction(this, turnSpeed, true);

@@ -27,12 +27,7 @@ public class RideDolphinAction extends AbstractInputAction {
 
             player.setLocalLocation(new Vector3f(x, y, z));
             player.setLocalRotation(dol.getLocalRotation());
-
-            game.onDolphin = !game.onDolphin;
-        } else {
-            if (player.getLocalLocation().distance(dol.getLocalLocation()) < 4.0f) {
-                game.onDolphin = !game.onDolphin;
-            }
         }
+        game.onDolphin = !game.onDolphin;
     }
 }
