@@ -177,8 +177,11 @@ public class MyGame extends VariableFrameRateGame {
 	public void update() {
 		lastFrameTime = currFrameTime;
 		currFrameTime = System.currentTimeMillis();
-		double deltaTime = (currFrameTime - lastFrameTime) / 1000.0;
-		if (!paused) elapsedTime += deltaTime;
+		double deltaTime = 0;
+		if (!paused) {
+			deltaTime = (currFrameTime - lastFrameTime) / 1000.0;
+			elapsedTime += deltaTime;
+		}
 		myDolphin.update(deltaTime);
 		manualDiamond.setLocalRotation(new Matrix4f().rotationY((float)elapsedTime));
 		im.update((float)deltaTime);
@@ -235,5 +238,9 @@ public class MyGame extends VariableFrameRateGame {
 		} else {
 			cam.setLocation(loc);
 		}
+	}
+
+	public boolean isPaused() {
+		return paused;
 	}
 }
