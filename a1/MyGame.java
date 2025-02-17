@@ -17,12 +17,15 @@ public class MyGame extends VariableFrameRateGame {
 	private final MySatellite satellite1, satellite2, satellite3;
 	private ManualDiamond manualDiamondS;
 	private GameObject manualDiamond;
+	private boolean paused;
 
 	Camera cam;
 
 	Line linxS, linyS, linzS;
 
 	TextureImage carbon, stainedsurface, greywall, detonated, disarmedCube, disarmedSphere, disarmedTorus, reddot, driedlava, redtextile, manualDiamondT;
+
+	HUDmanager hud;
 
 	public MyGame() {
 		super();
@@ -167,6 +170,7 @@ public class MyGame extends VariableFrameRateGame {
 		cam = engine.getRenderSystem().getViewport("MAIN").getCamera();
 		cam.setLocation(new Vector3f(0, 0, 5));
 		initInputs();
+		hud = new HUDmanager(engine);
 	}
 
 	@Override
@@ -174,13 +178,14 @@ public class MyGame extends VariableFrameRateGame {
 		lastFrameTime = currFrameTime;
 		currFrameTime = System.currentTimeMillis();
 		double deltaTime = (currFrameTime - lastFrameTime) / 1000.0;
-		elapsedTime += deltaTime;
+		if (!paused) elapsedTime += deltaTime;
 		myDolphin.update(deltaTime);
 		manualDiamond.setLocalRotation(new Matrix4f().rotationY((float)elapsedTime));
 		im.update((float)deltaTime);
 		updateCamera();
 		updateSatelliteStates();
 		updatePlayerCoords();
+		hud.update();
 	}
 
 	private void updatePlayerCoords() { if (onDolphin) MyPlayer.player.setLocalLocation(MyDolphin.dol.getLocalLocation()); }
@@ -194,8 +199,16 @@ public class MyGame extends VariableFrameRateGame {
 
 			if (playerDistance < 2.52f) {
 				if (!satellite.isDisarmed() && !satellite.isDetonated()) {
-					satellite.setDetonated(onDolphin);
-					satellite.setDisarmed(!onDolphin);
+					if (onDolphin) {
+						satellite.setDetonated(true);
+						satellite.setDisarmed(false);
+						hud.setGameOver();
+					} else {
+						satellite.setDetonated(false);
+						satellite.setDisarmed(true);
+						hud.incrementScore();
+					}
+					paused = true;
 				}
 			}
 			satellite.setClose(playerDistance < 5.0f);
