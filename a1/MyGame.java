@@ -15,12 +15,14 @@ public class MyGame extends VariableFrameRateGame {
 	private final MyPlayer myPlayer;
     private final MyDolphin myDolphin;
 	private final MySatellite satellite1, satellite2, satellite3;
+	private ManualDiamond manualDiamondS;
+	private GameObject manualDiamond;
 
 	Camera cam;
 
 	Line linxS, linyS, linzS;
 
-	TextureImage carbon, stainedsurface, greywall, close, detonated, disarmedCube, disarmedSphere, disarmedTorus, reddot, driedlava, redtextile;
+	TextureImage carbon, stainedsurface, greywall, detonated, disarmedCube, disarmedSphere, disarmedTorus, reddot, driedlava, redtextile, manualDiamondT;
 
 	public MyGame() {
 		super();
@@ -46,6 +48,7 @@ public class MyGame extends VariableFrameRateGame {
 		satellite1.loadShape(new Cube());
 		satellite2.loadShape(new Sphere());
 		satellite3.loadShape(new Torus());
+		manualDiamondS = new ManualDiamond();
 
 		linxS = new Line(new Vector3f(0f,0f,0f), new Vector3f(3f,0f,0f));
 		linyS = new Line(new Vector3f(0f,0f,0f), new Vector3f(0f,3f,0f));
@@ -64,6 +67,7 @@ public class MyGame extends VariableFrameRateGame {
 		reddot = new TextureImage("reddot.jpg");
 		driedlava = new TextureImage("driedlava.jpg");
 		redtextile = new TextureImage("redtextile.jpg");
+		manualDiamondT = new TextureImage("manualDiamond.jpg");
 
 		myDolphin.loadTexture();
 		satellite1.loadTexture(greywall, reddot, disarmedCube, detonated);
@@ -78,6 +82,10 @@ public class MyGame extends VariableFrameRateGame {
 		satellite1.buildObject(0.5f, 10, 10);
 		satellite2.buildObject(1.0f, 10, 10);
 		satellite3.buildObject(1.5f, 10, 10);
+
+		manualDiamond = new GameObject(GameObject.root(), manualDiamondS, manualDiamondT);
+		manualDiamond.setLocalTranslation(new Matrix4f().translation(0, 10, 0));
+		manualDiamond.setLocalScale(new Matrix4f().scaling(0.5f));
 
 		// add X,Y,-Z axes
 		GameObject x = new GameObject(GameObject.root(), linxS);
