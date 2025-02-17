@@ -93,4 +93,10 @@ public class MySatellite {
     public void setDetonated(boolean detonated) {
         isDetonated = detonated;
     }
+
+    public String getSatelliteInfo() {
+        // display current state (close, disarmed or detonated)
+
+        return isDetonated ? "Detonated" : isDisarmed ? "Disarmed" : isClose ? "Close" : "Normal";
+    }
 }

@@ -25,7 +25,7 @@ public class MyGame extends VariableFrameRateGame {
 
 	TextureImage carbon, stainedsurface, greywall, detonated, disarmedCube, disarmedSphere, disarmedTorus, reddot, driedlava, redtextile, manualDiamondT;
 
-	HUDmanager hud;
+	MyHUDmanager hud;
 
 	public MyGame() {
 		super();
@@ -170,7 +170,7 @@ public class MyGame extends VariableFrameRateGame {
 		cam = engine.getRenderSystem().getViewport("MAIN").getCamera();
 		cam.setLocation(new Vector3f(0, 0, 5));
 		initInputs();
-		hud = new HUDmanager(engine);
+		hud = new MyHUDmanager(engine, this);
 	}
 
 	@Override
@@ -206,15 +206,15 @@ public class MyGame extends VariableFrameRateGame {
 						satellite.setDetonated(true);
 						satellite.setDisarmed(false);
 						hud.setGameOver();
+						paused = true;
 					} else {
 						satellite.setDetonated(false);
 						satellite.setDisarmed(true);
 						hud.incrementScore();
 					}
-					paused = true;
 				}
 			}
-			satellite.setClose(playerDistance < 5.0f);
+			satellite.setClose(playerDistance < 7.0f);
 
 			satellite.updateTexture();
 		}
@@ -242,5 +242,21 @@ public class MyGame extends VariableFrameRateGame {
 
 	public boolean isPaused() {
 		return paused;
+	}
+
+	public void setPaused() {
+		this.paused = true;
+	}
+
+	public MySatellite getSatellite1() {
+		return satellite1;
+	}
+
+	public MySatellite getSatellite2() {
+		return satellite2;
+	}
+
+	public MySatellite getSatellite3() {
+		return satellite3;
 	}
 }
