@@ -28,7 +28,7 @@ public class MyHUDmanager {
         Vector3f hudYellow = new Vector3f(1, 1, 0);
 
         engine.getHUDmanager().setHUD1(newScore, hudWhite, 10, 10);
-        engine.getHUDmanager().setHUD2(satelliteInfo, hudYellow, 10, 900);
+        engine.getHUDmanager().setHUD2(satelliteInfo, hudYellow, 10, 920);
 
         if (score >= 3) {
             engine.getHUDmanager().setHUD1("You win!", hudGreen, 1900 / 2 - 50, 1000 / 2 - 50);
