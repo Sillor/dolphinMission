@@ -84,8 +84,8 @@ public class MyGame extends VariableFrameRateGame {
 		satellite3.buildObject(1.5f, 10, 10);
 
 		manualDiamond = new GameObject(GameObject.root(), manualDiamondS, manualDiamondT);
-		manualDiamond.setLocalTranslation(new Matrix4f().translation(0, 10, 0));
-		manualDiamond.setLocalScale(new Matrix4f().scaling(0.5f));
+		manualDiamond.setLocalTranslation(new Matrix4f().translation(0, -10, 0));
+		manualDiamond.setLocalScale(new Matrix4f().scaling(1f));
 
 		// add X,Y,-Z axes
 		GameObject x = new GameObject(GameObject.root(), linxS);
@@ -176,6 +176,7 @@ public class MyGame extends VariableFrameRateGame {
 		double deltaTime = (currFrameTime - lastFrameTime) / 1000.0;
 		elapsedTime += deltaTime;
 		myDolphin.update(deltaTime);
+		manualDiamond.setLocalRotation(new Matrix4f().rotationY((float)elapsedTime));
 		im.update((float)deltaTime);
 		updateCamera();
 		updateSatelliteStates();
