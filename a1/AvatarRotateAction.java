@@ -18,6 +18,7 @@ public class AvatarRotateAction extends AbstractInputAction {
     @Override
     public void performAction(float time, Event e) {
         GameObject av = game.getAvatar();
+        float speed = this.speed * time;
         av.localPitch(isUp ? -speed : speed);
     }
 }

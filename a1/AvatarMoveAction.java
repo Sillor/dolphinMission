@@ -18,6 +18,9 @@ public class AvatarMoveAction extends AbstractInputAction {
     @Override
     public void performAction(float time, Event e) {
         GameObject av = game.getAvatar();
+
+        float distance = this.distance * time;
+
         if (forward) {
             av.moveForward(game.onDolphin ? distance * 3 : distance);
         } else {

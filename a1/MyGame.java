@@ -6,8 +6,6 @@ import tage.input.InputManager;
 import tage.input.action.AbstractInputAction;
 import tage.shapes.*;
 import org.joml.*;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class MyGame extends VariableFrameRateGame {
 	private static Engine engine;
@@ -22,7 +20,7 @@ public class MyGame extends VariableFrameRateGame {
 
 	Line linxS, linyS, linzS;
 
-	TextureImage satellite, close, detonated, disarmed;
+	TextureImage carbon, stainedsurface, greywall, close, detonated, disarmedCube, disarmedSphere, disarmedTorus, reddot, driedlava, redtextile;
 
 	public MyGame() {
 		super();
@@ -56,63 +54,40 @@ public class MyGame extends VariableFrameRateGame {
 
 	@Override
 	public void loadTextures() {
-		satellite = new TextureImage("satellite.jpg");
-		close = new TextureImage("close.jpg");
+		carbon = new TextureImage("carbon.jpg");
+		stainedsurface = new TextureImage("stainedsurface.jpg");
+		greywall = new TextureImage("greywall.jpg");
 		detonated = new TextureImage("explosion.jpg");
-		disarmed = new TextureImage("emoji.jpg");
+		disarmedCube = new TextureImage("disarmedCube.jpg");
+		disarmedSphere = new TextureImage("disarmedSphere.jpg");
+		disarmedTorus = new TextureImage("disarmedTorus.jpg");
+		reddot = new TextureImage("reddot.jpg");
+		driedlava = new TextureImage("driedlava.jpg");
+		redtextile = new TextureImage("redtextile.jpg");
 
 		myDolphin.loadTexture();
-		satellite1.loadTexture(satellite, close, disarmed, detonated);
-		satellite2.loadTexture(satellite, close, disarmed, detonated);
-		satellite3.loadTexture(satellite, close, disarmed, detonated);
+		satellite1.loadTexture(greywall, reddot, disarmedCube, detonated);
+		satellite2.loadTexture(carbon, redtextile, disarmedSphere, detonated);
+		satellite3.loadTexture(stainedsurface, driedlava, disarmedTorus, detonated);
 	}
 
 	@Override
 	public void buildObjects() {
-		myPlayer.buildObject(3.0f, 0, 0, 1.0f);
-		myDolphin.buildObject(0, 0, 0, 3.0f);
+		myPlayer.buildObject(3.0f,0,0,1.0f);
+		myDolphin.buildObject(0,0,0,3.0f);
+\
+		satellite1.buildObject(0.5f, 10, 10);
+		satellite2.buildObject(1.0f, 10, 10);
+		satellite3.buildObject(1.5f, 10, 10);
 
-		float maxDistance = 25.0f;
-		int numSatellites = 3;
-		ArrayList<Vector3f> satellitePositions = new ArrayList<>();
-		Random random = new Random();
-
-		for (int i = 0; i < numSatellites; i++) {
-			Vector3f newPosition;
-			boolean collision;
-
-			do {
-				float x = (random.nextFloat() * 2 - 1) * maxDistance;
-				float y = (random.nextFloat() * 2 - 1) * maxDistance;
-				float z = (random.nextFloat() * 2 - 1) * maxDistance;
-				newPosition = new Vector3f(x, y, z);
-
-				collision = false;
-				for (Vector3f pos : satellitePositions) {
-					if (newPosition.distance(pos) < 2.0f) { // Ensuring no collision
-						collision = true;
-						break;
-					}
-				}
-			} while (collision);
-
-			satellitePositions.add(newPosition);
-		}
-
-		// Assign positions to satellites
-		satellite1.buildObject(satellitePositions.get(0).x, satellitePositions.get(0).y, satellitePositions.get(0).z, 0.5f);
-		satellite2.buildObject(satellitePositions.get(1).x, satellitePositions.get(1).y, satellitePositions.get(1).z, 1.0f);
-		satellite3.buildObject(satellitePositions.get(2).x, satellitePositions.get(2).y, satellitePositions.get(2).z, 1.5f);
-
-		// Add X, Y, -Z axes
+		// add X,Y,-Z axes
 		GameObject x = new GameObject(GameObject.root(), linxS);
 		GameObject y = new GameObject(GameObject.root(), linyS);
 		GameObject z = new GameObject(GameObject.root(), linzS);
-		(x.getRenderStates()).setColor(new Vector3f(1f, 0f, 0f));
-		(y.getRenderStates()).setColor(new Vector3f(0f, 1f, 0f));
-		(z.getRenderStates()).setColor(new Vector3f(0f, 0f, 1f));
+		(x.getRenderStates()).setColor(new Vector3f(1f,0f,0f));
+		(y.getRenderStates()).setColor(new Vector3f(0f,1f,0f));
+		(z.getRenderStates()).setColor(new Vector3f(0f,0f,1f));
 	}
-
 
 	@Override
 	public void initializeLights() {
@@ -125,8 +100,8 @@ public class MyGame extends VariableFrameRateGame {
 	private void initInputs() {
 		im = engine.getInputManager();
 
-		float moveSpeed = 0.05f;
-		float turnSpeed = 0.03f;
+		float moveSpeed = 5.0f;
+		float turnSpeed = 1.0f;
 
 		// Movement actions
 		AvatarMoveAction moveForward = new AvatarMoveAction(this, moveSpeed, true);
@@ -172,7 +147,7 @@ public class MyGame extends VariableFrameRateGame {
 		double deltaTime = (currFrameTime - lastFrameTime) / 1000.0;
 		elapsedTime += deltaTime;
 		myDolphin.update(deltaTime);
-		im.update((float)elapsedTime);
+		im.update((float)deltaTime);
 		updateCamera();
 		updateSatelliteStates();
 		updatePlayerCoords();
@@ -187,13 +162,13 @@ public class MyGame extends VariableFrameRateGame {
 		for (MySatellite satellite : satellites) {
 			playerDistance = MyPlayer.player.getLocalLocation().distance(satellite.satellite.getLocalLocation());
 
-			if (playerDistance < 2.0f) {
+			if (playerDistance < 2.52f) {
 				if (!satellite.isDisarmed() && !satellite.isDetonated()) {
 					satellite.setDetonated(onDolphin);
 					satellite.setDisarmed(!onDolphin);
 				}
 			}
-			satellite.setClose(playerDistance < 4.0f);
+			satellite.setClose(playerDistance < 5.0f);
 
 			satellite.updateTexture();
 		}

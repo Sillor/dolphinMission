@@ -1,13 +1,11 @@
 package a1;
 
-import com.jogamp.opengl.util.texture.Texture;
+import org.joml.Vector3f;
 import org.joml.Matrix4f;
-import org.w3c.dom.Text;
 import tage.GameObject;
-import tage.ObjShape;
-import tage.TextureImage;
+import tage.*;
 
-import java.util.Objects;
+import java.util.Random;
 
 public class MySatellite {
     ObjShape obj;
@@ -20,6 +18,7 @@ public class MySatellite {
     private TextureImage disarmedImage;
     private TextureImage detonatedImage;
     private TextureImage closeImage;
+    private Vector3f position;
 
     MySatellite() {
     }
@@ -36,14 +35,20 @@ public class MySatellite {
         this.closeImage = closeImage;
     }
 
-    void buildObject(float x, float y, float z, float scale) {
-        Matrix4f initialTranslation, initialScale;
-
+    void buildObject(float scale, float maxDistance, float gap) {
+        this.position = generateRandomPosition(maxDistance, gap);
         satellite = new GameObject(GameObject.root(), obj, texture);
-        initialTranslation = (new Matrix4f()).translation(x,y,z);
-        initialScale = (new Matrix4f()).scaling(scale);
-        satellite.setLocalTranslation(initialTranslation);
-        satellite.setLocalScale(initialScale);
+        satellite.setLocalTranslation(new Matrix4f().translation(position.x, position.y, position.z));
+        satellite.setLocalScale(new Matrix4f().scaling(scale));
+    }
+
+    private Vector3f generateRandomPosition(float maxDistance, float gap) {
+        Random random = new Random();
+        return new Vector3f(
+                (random.nextFloat() * 2 - 1) * maxDistance + gap,
+                (random.nextFloat() * 2 - 1) * maxDistance + gap,
+                (random.nextFloat() * 2 - 1) * maxDistance + gap
+        );
     }
 
     void updateTexture() {
