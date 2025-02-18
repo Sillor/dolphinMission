@@ -1,4 +1,6 @@
-package tage.shapes;
+package a1;
+
+import tage.shapes.ManualObject;
 
 public class ManualDiamond extends ManualObject {
     private float[] vertices = new float[] {

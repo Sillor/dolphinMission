@@ -137,10 +137,12 @@ public class MyGame extends VariableFrameRateGame {
 		float turnSpeed = 1.0f;
 
 		// Movement actions
-		AvatarMoveAction moveForward = new AvatarMoveAction(this, moveSpeed, true, MyDolphin.dol);
-		AvatarMoveAction moveBackward = new AvatarMoveAction(this, moveSpeed, false, MyDolphin.dol);
-		AvatarTurnAction turnLeft = new AvatarTurnAction(this, turnSpeed, true);
-		AvatarTurnAction turnRight = new AvatarTurnAction(this, turnSpeed, false);
+		AvatarMoveAction moveForwardKb = new AvatarMoveAction(this, MyDolphin.dol, false, moveSpeed, true);
+		AvatarMoveAction moveBackwardKb = new AvatarMoveAction(this,MyDolphin.dol, false, moveSpeed, false);
+		AvatarTurnAction turnLeftKb = new AvatarTurnAction(this, false, turnSpeed, true);
+		AvatarTurnAction turnRightKb = new AvatarTurnAction(this, false, turnSpeed, false);
+		AvatarMoveAction moveGp = new AvatarMoveAction(this, MyDolphin.dol, true, moveSpeed, true);
+		AvatarTurnAction turnGp = new AvatarTurnAction(this, true, turnSpeed, true);
 		AvatarRotateAction rotateUp = new AvatarRotateAction(this, turnSpeed, true);
 		AvatarRotateAction rotateDown = new AvatarRotateAction(this, turnSpeed, false);
 
@@ -148,17 +150,25 @@ public class MyGame extends VariableFrameRateGame {
 		RideDolphinAction rideDolphin = new RideDolphinAction(this, MyDolphin.dol, MyPlayer.player);
 
 		// Key bindings
-		associateKeyAction(Component.Identifier.Key.W, moveForward, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(Component.Identifier.Key.S, moveBackward, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(Component.Identifier.Key.A, turnLeft, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(Component.Identifier.Key.D, turnRight, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.W, moveForwardKb, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.S, moveBackwardKb, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.A, turnLeftKb, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateKeyAction(Component.Identifier.Key.D, turnRightKb, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		associateKeyAction(Component.Identifier.Key.UP, rotateUp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		associateKeyAction(Component.Identifier.Key.DOWN, rotateDown, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		associateKeyAction(Component.Identifier.Key.SPACE, rideDolphin, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
+
+		// Gamepad bindings
+		associateGamepadAction(Component.Identifier.Axis.Y, moveGp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		associateGamepadAction(Component.Identifier.Axis.X, turnGp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 	}
 
 	private void associateKeyAction(Component.Identifier.Key key, AbstractInputAction action, InputManager.INPUT_ACTION_TYPE type) {
 		im.associateActionWithAllKeyboards(key, action, type);
+	}
+
+	private void associateGamepadAction(Component.Identifier.Axis axis, AbstractInputAction action, InputManager.INPUT_ACTION_TYPE type) {
+		im.associateActionWithAllGamepads(axis, action, type);
 	}
 
 	@Override

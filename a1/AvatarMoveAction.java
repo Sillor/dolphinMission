@@ -7,27 +7,40 @@ import tage.input.action.AbstractInputAction;
 
 public class AvatarMoveAction extends AbstractInputAction {
     private final MyGame game;
+    private final GameObject dol;
+    private final boolean isGamepad;
     private final float distance;
     private final boolean forward;
-    private final GameObject dol;
 
-    public AvatarMoveAction(MyGame g, float distance, boolean forward, GameObject dol) {
+    public AvatarMoveAction(MyGame g, GameObject dol, boolean isGamepad, float distance, boolean forward) {
         this.game = g;
+        this.dol = dol;
+        this.isGamepad = isGamepad;
         this.distance = distance;
         this.forward = forward;
-        this.dol = dol;
     }
 
     @Override
     public void performAction(float time, Event e) {
         GameObject av = game.getAvatar();
-        float distance = this.distance * time * (game.onDolphin ? 3 : 1);
+        float axisValue;
+
+        if (isGamepad) {
+            axisValue = -e.getValue();
+            if (Math.abs(axisValue) < 0.1) {
+                return;
+            }
+        } else {
+            axisValue = forward ? 1 : -1;
+        }
+
+        float moveDistance = axisValue * time * 5.0f * (game.onDolphin ? 3 : 1);
         Vector3f prevLocation = new Vector3f(av.getLocalLocation());
 
-        if (forward) {
-            av.moveForward(distance);
+        if (axisValue > 0) {
+            av.moveForward(moveDistance);
         } else {
-            av.moveBackward(distance);
+            av.moveBackward(-moveDistance);
         }
 
         float avToDol = av.getLocalLocation().distance(dol.getLocalLocation());
