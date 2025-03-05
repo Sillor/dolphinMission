@@ -4,6 +4,7 @@ import net.java.games.input.Component;
 import tage.*;
 import tage.input.InputManager;
 import tage.input.action.AbstractInputAction;
+import tage.nodeControllers.RotationController;
 import tage.shapes.*;
 import org.joml.*;
 
@@ -22,6 +23,9 @@ public class MyGame extends VariableFrameRateGame {
 	private OverheadCamera overheadCamera;
 	private Plane planeS;
 	private GameObject plane;
+	private RotationController rc1;
+	private RotationController rc2;
+	private RotationController rc3;
 
 	Camera mainCam, overheadCam;
 
@@ -204,6 +208,15 @@ public class MyGame extends VariableFrameRateGame {
 		overheadCamera = new OverheadCamera(overheadCam, im.getKeyboardName(), null, engine);
 		initInputs();
 		hud = new MyHUDmanager(engine, this);
+		rc1 = new RotationController(engine, new Vector3f(0,1,0), 0.001f);
+		rc2 = new RotationController(engine, new Vector3f(0,1,0), 0.001f);
+		rc3= new RotationController(engine, new Vector3f(0,1,0), 0.001f);
+		rc1.addTarget(satellite1.satellite);
+		rc2.addTarget(satellite2.satellite);
+		rc3.addTarget(satellite3.satellite);
+		(engine.getSceneGraph()).addNodeController(rc1);
+		(engine.getSceneGraph()).addNodeController(rc2);
+		(engine.getSceneGraph()).addNodeController(rc3);
 	}
 
 	@Override
@@ -229,9 +242,11 @@ public class MyGame extends VariableFrameRateGame {
 
 	private void updateSatelliteStates() {
 		MySatellite[] satellites = {satellite1, satellite2, satellite3};
+		RotationController[] rcs = {rc1, rc2, rc3};
 		float playerDistance;
 
-		for (MySatellite satellite : satellites) {
+		for (int i = 0; i < satellites.length; i++) {
+			MySatellite satellite = satellites[i];
 			playerDistance = MyPlayer.player.getLocalLocation().distance(satellite.satellite.getLocalLocation());
 
 			if (playerDistance < 2.5f) {
@@ -245,6 +260,7 @@ public class MyGame extends VariableFrameRateGame {
 						satellite.setDetonated(false);
 						satellite.setDisarmed(true);
 						hud.incrementScore();
+						rcs[i].toggle();
 					}
 				}
 			}
