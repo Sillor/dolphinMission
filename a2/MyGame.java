@@ -20,6 +20,8 @@ public class MyGame extends VariableFrameRateGame {
 	private boolean paused;
 	private CameraOrbit3D cameraOrbit;
 	private OverheadCamera overheadCamera;
+	private Plane planeS;
+	private GameObject plane;
 
 	Camera mainCam, overheadCam;
 
@@ -65,6 +67,7 @@ public class MyGame extends VariableFrameRateGame {
 		satellite2.loadShape(new Sphere());
 		satellite3.loadShape(new Torus());
 		manualDiamondS = new ManualDiamond();
+		planeS = new Plane();
 
 		linxS = new Line(new Vector3f(0f,0f,0f), new Vector3f(12f,0f,0f));
 		linyS = new Line(new Vector3f(0f,0f,0f), new Vector3f(0f,12f,0f));
@@ -111,6 +114,11 @@ public class MyGame extends VariableFrameRateGame {
 		(x.getRenderStates()).setColor(new Vector3f(1f,0f,0f));
 		(y.getRenderStates()).setColor(new Vector3f(0f,1f,0f));
 		(z.getRenderStates()).setColor(new Vector3f(0f,0f,1f));
+
+		plane = new GameObject(GameObject.root(), planeS, carbon);
+		plane.getRenderStates().setTiling(2);
+		plane.setLocalScale(new Matrix4f().scaling(100f));
+		plane.setLocalTranslation(new Matrix4f().translation(0, -5, 0));
 	}
 
 	@Override
