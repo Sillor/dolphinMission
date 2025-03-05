@@ -19,7 +19,7 @@ public class MyHUDmanager {
     public void update() {
         MySatellite closestSat = getClosestSatellite();
 
-        String newScore = "Score: " + score;
+        String newScore = "Score: " + score + "; ";
         String satelliteInfo = getString(closestSat);
 
         Vector3f hudWhite = new Vector3f(1, 1, 1);
@@ -38,15 +38,22 @@ public class MyHUDmanager {
 
         // Set HUD1 in the upper-left corner of the LEFT viewport
         engine.getHUDmanager().setHUD1(
-                satelliteInfo,
+                newScore + satelliteInfo,
                 hudYellow,
                 leftViewportX + 20,   // X position: Start from left
                 leftViewportY + 10       // Y position: Move down from top
         );
 
+        String avatarInfo = String.format(
+                "x: %.2f, y: %.2f, z: %.2f",
+                g.getAvatar().getLocalLocation().x,
+                g.getAvatar().getLocalLocation().y,
+                g.getAvatar().getLocalLocation().z
+        );
+
         // Set HUD2 in the upper-left corner of the RIGHT viewport
         engine.getHUDmanager().setHUD2(
-                newScore,
+                avatarInfo,
                 hudWhite,
                 rightViewportX + 10,  // X position: Start from right viewport's left
                 rightViewportY + 10      // Y position: Move down from top
