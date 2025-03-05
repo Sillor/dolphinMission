@@ -46,7 +46,7 @@ public class MySatellite {
         Random random = new Random();
         return new Vector3f(
                 (random.nextFloat() * 2 - 1) * maxDistance + gap,
-                (random.nextFloat() * 2 - 1) * maxDistance + gap,
+                0.0f,
                 (random.nextFloat() * 2 - 1) * maxDistance + gap
         );
     }

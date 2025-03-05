@@ -27,16 +27,38 @@ public class MyHUDmanager {
         Vector3f hudGreen = new Vector3f(0, 1, 0);
         Vector3f hudYellow = new Vector3f(1, 1, 0);
 
-        engine.getHUDmanager().setHUD1(newScore, hudWhite, 10, 10);
-        engine.getHUDmanager().setHUD2(satelliteInfo, hudYellow, 10, 920);
+        // Get LEFT viewport properties
+        int leftViewportX = 0;
+        int leftViewportY = 0;
+
+        // Get RIGHT viewport properties
+        int rightViewportX = (int) engine.getRenderSystem().getViewport("LEFT").getActualWidth() - (int) engine.getRenderSystem().getViewport("RIGHT").getActualWidth();
+        int rightViewportY = (int) engine.getRenderSystem().getViewport("RIGHT").getRelativeBottom() +
+                (int) engine.getRenderSystem().getViewport("RIGHT").getRelativeHeight();
+
+        // Set HUD1 in the upper-left corner of the LEFT viewport
+        engine.getHUDmanager().setHUD1(
+                satelliteInfo,
+                hudYellow,
+                leftViewportX + 20,   // X position: Start from left
+                leftViewportY + 10       // Y position: Move down from top
+        );
+
+        // Set HUD2 in the upper-left corner of the RIGHT viewport
+        engine.getHUDmanager().setHUD2(
+                newScore,
+                hudWhite,
+                rightViewportX + 10,  // X position: Start from right viewport's left
+                rightViewportY + 10      // Y position: Move down from top
+        );
 
         if (score >= 3) {
-            engine.getHUDmanager().setHUD1("You win!", hudGreen, 1900 / 2 - 50, 1000 / 2 - 50);
+            engine.getHUDmanager().setHUD1("You win!", hudGreen, (int) engine.getRenderSystem().getViewport("LEFT").getActualWidth() / 2 - 50, (int) engine.getRenderSystem().getViewport("LEFT").getActualHeight() / 2 - 50);
             g.setPaused();
         }
 
         if (isGameOver) {
-            engine.getHUDmanager().setHUD1("You lost!", hudRed, 1900 / 2 - 50, 1200 / 2 - 50);
+            engine.getHUDmanager().setHUD1("You lost!", hudRed, (int) engine.getRenderSystem().getViewport("LEFT").getActualWidth() / 2 - 50, (int) engine.getRenderSystem().getViewport("LEFT").getActualHeight() / 2 - 50);
         }
     }
 

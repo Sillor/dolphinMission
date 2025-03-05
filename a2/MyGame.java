@@ -95,9 +95,9 @@ public class MyGame extends VariableFrameRateGame {
 	public void buildObjects() {
 		myPlayer.buildObject(3.0f,0,0,1.0f);
 		myDolphin.buildObject(0,0,0,3.0f);
-		satellite1.buildObject(0.5f, 15, 10);
-		satellite2.buildObject(1.0f, 15, 10);
-		satellite3.buildObject(1.5f, 15, 10);
+		satellite1.buildObject(0.5f, 15, 20);
+		satellite2.buildObject(1.0f, 15, 20);
+		satellite3.buildObject(1.5f, 15, 20);
 		satellite3.satellite.getRenderStates().setTiling(2);
 
 		manualDiamond = new GameObject(GameObject.root(), manualDiamondS, manualDiamondT);
