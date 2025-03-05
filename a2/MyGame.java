@@ -132,8 +132,6 @@ public class MyGame extends VariableFrameRateGame {
 	}
 
 	private void initInputs() {
-		im = engine.getInputManager();
-
 		float moveSpeed = 5.0f;
 		float turnSpeed = 1.0f;
 
@@ -174,6 +172,7 @@ public class MyGame extends VariableFrameRateGame {
 
 	@Override
 	public void initializeGame() {
+		im = engine.getInputManager();
 		lastFrameTime = System.currentTimeMillis();
 		currFrameTime = System.currentTimeMillis();
 		elapsedTime = 0.0;
@@ -181,9 +180,9 @@ public class MyGame extends VariableFrameRateGame {
 		engine.getRenderSystem().setWindowDimensions(1900, 1000);
 		cam = engine.getRenderSystem().getViewport("MAIN").getCamera();
 		cam.setLocation(new Vector3f(0, 0, 5));
+		cameraOrbit = new CameraOrbit3D(cam, MyDolphin.dol, im.getKeyboardName(), null, engine);
 		initInputs();
 		hud = new MyHUDmanager(engine, this);
-		cameraOrbit = new CameraOrbit3D(cam, MyDolphin.dol, im.getKeyboardName(), null, engine);
 	}
 
 	@Override
@@ -198,9 +197,9 @@ public class MyGame extends VariableFrameRateGame {
 		myDolphin.update(deltaTime);
 		manualDiamond.setLocalRotation(new Matrix4f().rotationY((float)elapsedTime));
 		im.update((float)deltaTime);
-		cameraOrbit.updateCameraPosition();
 		updateSatelliteStates();
 		updatePlayerCoords();
+		cameraOrbit.updateCameraPosition();
 		hud.update();
 	}
 
@@ -230,26 +229,6 @@ public class MyGame extends VariableFrameRateGame {
 			satellite.setClose(playerDistance < 7.0f);
 
 			satellite.updateTexture();
-		}
-	}
-
-
-	private void updateCamera() {
-		cam = engine.getRenderSystem().getViewport("MAIN").getCamera();
-		Vector3f loc, fwd, up, right;
-
-		loc = onDolphin ? myDolphin.getLocation() : myPlayer.getLocation();
-		fwd = onDolphin ? myDolphin.getForwardVector() : myPlayer.getForwardVector();
-		up = onDolphin ? myDolphin.getUpVector() : myPlayer.getUpVector();
-		right = onDolphin ? myDolphin.getRightVector() : myPlayer.getRightVector();
-
-		cam.setU(right);
-		cam.setV(up);
-		cam.setN(fwd);
-		if (onDolphin) {
-			cam.setLocation(loc.add(up.mul(1.3f)).add(fwd.mul(-2.5f)));
-		} else {
-			cam.setLocation(loc);
 		}
 	}
 

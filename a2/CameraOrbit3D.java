@@ -12,7 +12,7 @@ public class CameraOrbit3D {
     private final GameObject avatar;
     private float cameraAzimuth = 0.0f;
     private float cameraElevation = 20.0f;
-    private float cameraRadius = 2.0f;
+    private float cameraRadius = 3.0f;
 
     private static final float ROTATION_SPEED = 2.0f;
     private static final float ZOOM_SPEED = 0.1f;
@@ -32,25 +32,25 @@ public class CameraOrbit3D {
     private void setupInputs(String kb, String gp) {
         InputManager im = engine.getInputManager();
 
-        im.associateAction(kb, net.java.games.input.Component.Identifier.Key.I,
+        im.associateActionWithAllKeyboards(net.java.games.input.Component.Identifier.Key.I,
                 new OrbitAzimuthAction(true), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-        im.associateAction(kb, net.java.games.input.Component.Identifier.Key.O,
+        im.associateActionWithAllKeyboards(net.java.games.input.Component.Identifier.Key.O,
                 new OrbitAzimuthAction(false), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-        im.associateAction(kb, net.java.games.input.Component.Identifier.Key.K,
+        im.associateActionWithAllKeyboards(net.java.games.input.Component.Identifier.Key.K,
                 new OrbitRadiusAction(true), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-        im.associateAction(kb, net.java.games.input.Component.Identifier.Key.L,
+        im.associateActionWithAllKeyboards(net.java.games.input.Component.Identifier.Key.L,
                 new OrbitRadiusAction(false), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-        im.associateAction(kb, net.java.games.input.Component.Identifier.Key.U,
+        im.associateActionWithAllKeyboards(net.java.games.input.Component.Identifier.Key.U,
                 new OrbitElevationAction(true), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-        im.associateAction(kb, net.java.games.input.Component.Identifier.Key.J,
+        im.associateActionWithAllKeyboards(net.java.games.input.Component.Identifier.Key.J,
                 new OrbitElevationAction(false), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 
         if (gp != null) {
-            im.associateAction(gp, net.java.games.input.Component.Identifier.Axis.X,
+            im.associateActionWithAllGamepads(net.java.games.input.Component.Identifier.Axis.X,
                     new OrbitAzimuthControllerAction(), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-            im.associateAction(gp, net.java.games.input.Component.Identifier.Axis.Y,
+            im.associateActionWithAllGamepads(net.java.games.input.Component.Identifier.Axis.Y,
                     new OrbitElevationControllerAction(), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-            im.associateAction(gp, net.java.games.input.Component.Identifier.Axis.Z,
+            im.associateActionWithAllGamepads(net.java.games.input.Component.Identifier.Axis.Z,
                     new OrbitRadiusControllerAction(), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
         }
     }
@@ -69,7 +69,7 @@ public class CameraOrbit3D {
         camera.lookAt(avatar);
     }
 
-    private class OrbitAzimuthAction extends AbstractInputAction {
+    class OrbitAzimuthAction extends AbstractInputAction {
         private boolean moveLeft;
 
         public OrbitAzimuthAction(boolean moveLeft) {
@@ -84,7 +84,7 @@ public class CameraOrbit3D {
         }
     }
 
-    private class OrbitRadiusAction extends AbstractInputAction {
+    class OrbitRadiusAction extends AbstractInputAction {
         private boolean zoomIn;
 
         public OrbitRadiusAction(boolean zoomIn) {
@@ -99,7 +99,7 @@ public class CameraOrbit3D {
         }
     }
 
-    private class OrbitElevationAction extends AbstractInputAction {
+    class OrbitElevationAction extends AbstractInputAction {
         private boolean moveUp;
 
         public OrbitElevationAction(boolean moveUp) {
