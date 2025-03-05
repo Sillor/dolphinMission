@@ -1,4 +1,4 @@
-package a1;
+package a2;
 
 import tage.shapes.ManualObject;
 

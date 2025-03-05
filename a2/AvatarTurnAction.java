@@ -1,4 +1,4 @@
-package a1;
+package a2;
 
 import net.java.games.input.Event;
 import org.joml.Math;
@@ -29,7 +29,7 @@ public class AvatarTurnAction extends AbstractInputAction {
                 return;
             }
         } else {
-            turnSpeed = isLeftTurn ? 1 : -1;
+            turnSpeed = 1;
         }
 
         float rotationAmount = turnSpeed * speed * time;

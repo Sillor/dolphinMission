@@ -1,4 +1,4 @@
-package a1;
+package a2;
 
 import net.java.games.input.Event;
 import org.joml.Vector3f;
