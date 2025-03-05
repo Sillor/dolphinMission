@@ -19,8 +19,9 @@ public class MyGame extends VariableFrameRateGame {
 	private GameObject manualDiamond;
 	private boolean paused;
 	private CameraOrbit3D cameraOrbit;
+	private OverheadCamera overheadCamera;
 
-	Camera cam;
+	Camera mainCam, overheadCam;
 
 	Line linxS, linyS, linzS;
 
@@ -44,6 +45,17 @@ public class MyGame extends VariableFrameRateGame {
 		engine = new Engine(game);
 		game.initializeSystem();
 		game.game_loop();
+	}
+
+	@Override
+	public void createViewports()
+	{ (engine.getRenderSystem()).addViewport("LEFT",0,0,1f,1f);
+		(engine.getRenderSystem()).addViewport("RIGHT",.75f,0,.25f,.25f);
+		Viewport rightVp =
+				(engine.getRenderSystem()).getViewport("RIGHT");
+		rightVp.setHasBorder(true);
+		rightVp.setBorderWidth(4);
+		rightVp.setBorderColor(0.0f, 1.0f, 0.0f);
 	}
 
 	@Override
@@ -142,8 +154,8 @@ public class MyGame extends VariableFrameRateGame {
 		AvatarTurnAction turnRightKb = new AvatarTurnAction(this, false, turnSpeed, false);
 		AvatarMoveAction moveGp = new AvatarMoveAction(this, MyDolphin.dol, true, moveSpeed, true);
 		AvatarTurnAction turnGp = new AvatarTurnAction(this, true, turnSpeed, true);
-		AvatarRotateAction rotateUp = new AvatarRotateAction(this, turnSpeed, true);
-		AvatarRotateAction rotateDown = new AvatarRotateAction(this, turnSpeed, false);
+//		AvatarRotateAction rotateUp = new AvatarRotateAction(this, turnSpeed, true);
+//		AvatarRotateAction rotateDown = new AvatarRotateAction(this, turnSpeed, false);
 
 		// Special action
 		RideDolphinAction rideDolphin = new RideDolphinAction(this, MyDolphin.dol, MyPlayer.player);
@@ -153,8 +165,8 @@ public class MyGame extends VariableFrameRateGame {
 		associateKeyAction(Component.Identifier.Key.S, moveBackwardKb, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		associateKeyAction(Component.Identifier.Key.A, turnLeftKb, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		associateKeyAction(Component.Identifier.Key.D, turnRightKb, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(Component.Identifier.Key.UP, rotateUp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(Component.Identifier.Key.DOWN, rotateDown, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+//		associateKeyAction(Component.Identifier.Key.UP, rotateUp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+//		associateKeyAction(Component.Identifier.Key.DOWN, rotateDown, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		associateKeyAction(Component.Identifier.Key.SPACE, rideDolphin, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
 
 		// Gamepad bindings
@@ -178,9 +190,10 @@ public class MyGame extends VariableFrameRateGame {
 		elapsedTime = 0.0;
 		onDolphin = true;
 		engine.getRenderSystem().setWindowDimensions(1900, 1000);
-		cam = engine.getRenderSystem().getViewport("MAIN").getCamera();
-		cam.setLocation(new Vector3f(0, 0, 5));
-		cameraOrbit = new CameraOrbit3D(cam, MyDolphin.dol, im.getKeyboardName(), null, engine);
+		mainCam = engine.getRenderSystem().getViewport("LEFT").getCamera();
+		overheadCam = engine.getRenderSystem().getViewport("RIGHT").getCamera();
+		cameraOrbit = new CameraOrbit3D(mainCam, MyDolphin.dol, im.getKeyboardName(), null, engine);
+		overheadCamera = new OverheadCamera(overheadCam, im.getKeyboardName(), null, engine);
 		initInputs();
 		hud = new MyHUDmanager(engine, this);
 	}
@@ -200,6 +213,7 @@ public class MyGame extends VariableFrameRateGame {
 		updateSatelliteStates();
 		updatePlayerCoords();
 		cameraOrbit.updateCameraPosition();
+		overheadCamera.updateCameraPosition();
 		hud.update();
 	}
 
