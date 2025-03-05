@@ -1,4 +1,4 @@
-package a1;
+package a2;
 
 import net.java.games.input.Component;
 import tage.*;
@@ -18,6 +18,7 @@ public class MyGame extends VariableFrameRateGame {
 	private ManualDiamond manualDiamondS;
 	private GameObject manualDiamond;
 	private boolean paused;
+	private CameraOrbit3D cameraOrbit;
 
 	Camera cam;
 
@@ -176,12 +177,13 @@ public class MyGame extends VariableFrameRateGame {
 		lastFrameTime = System.currentTimeMillis();
 		currFrameTime = System.currentTimeMillis();
 		elapsedTime = 0.0;
-		onDolphin = false;
+		onDolphin = true;
 		engine.getRenderSystem().setWindowDimensions(1900, 1000);
 		cam = engine.getRenderSystem().getViewport("MAIN").getCamera();
 		cam.setLocation(new Vector3f(0, 0, 5));
 		initInputs();
 		hud = new MyHUDmanager(engine, this);
+		cameraOrbit = new CameraOrbit3D(cam, MyDolphin.dol, im.getKeyboardName(), null, engine);
 	}
 
 	@Override
@@ -196,7 +198,7 @@ public class MyGame extends VariableFrameRateGame {
 		myDolphin.update(deltaTime);
 		manualDiamond.setLocalRotation(new Matrix4f().rotationY((float)elapsedTime));
 		im.update((float)deltaTime);
-		updateCamera();
+		cameraOrbit.updateCameraPosition();
 		updateSatelliteStates();
 		updatePlayerCoords();
 		hud.update();
