@@ -4,6 +4,7 @@ import net.java.games.input.Component;
 import tage.*;
 import tage.input.InputManager;
 import tage.input.action.AbstractInputAction;
+import tage.nodeControllers.HideController;
 import tage.nodeControllers.RotationController;
 import tage.shapes.*;
 import org.joml.*;
@@ -17,7 +18,7 @@ public class MyGame extends VariableFrameRateGame {
     private final MyDolphin myDolphin;
 	private final MySatellite satellite1, satellite2, satellite3;
 	private ManualDiamond manualDiamondS;
-	private GameObject manualDiamond;
+	private GameObject manualDiamond1, manualDiamond2, manualDiamond3;
 	private boolean paused;
 	private CameraOrbit3D cameraOrbit;
 	private OverheadCamera overheadCamera;
@@ -26,6 +27,9 @@ public class MyGame extends VariableFrameRateGame {
 	private RotationController rc1;
 	private RotationController rc2;
 	private RotationController rc3;
+	private HideController hc1;
+	private HideController hc2;
+	private HideController hc3;
 
 	Camera mainCam, overheadCam;
 
@@ -107,9 +111,15 @@ public class MyGame extends VariableFrameRateGame {
 		satellite3.buildObject(1.5f, 15, 20);
 		satellite3.satellite.getRenderStates().setTiling(2);
 
-		manualDiamond = new GameObject(GameObject.root(), manualDiamondS, manualDiamondT);
-		manualDiamond.setLocalTranslation(new Matrix4f().translation(0, -10, 0));
-		manualDiamond.setLocalScale(new Matrix4f().scaling(1f));
+		manualDiamond1 = new GameObject(GameObject.root(), manualDiamondS, manualDiamondT);
+		manualDiamond1.setLocalTranslation(new Matrix4f().translation(satellite1.satellite.getLocalLocation().x, satellite1.satellite.getLocalLocation().y + 1.0f, satellite1.satellite.getLocalLocation().z));
+		manualDiamond1.setLocalScale(new Matrix4f().scaling(0.2f));
+		manualDiamond2 = new GameObject(GameObject.root(), manualDiamondS, manualDiamondT);
+		manualDiamond2.setLocalTranslation(new Matrix4f().translation(satellite2.satellite.getLocalLocation().x, satellite2.satellite.getLocalLocation().y + 1.0f, satellite2.satellite.getLocalLocation().z));
+		manualDiamond2.setLocalScale(new Matrix4f().scaling(0.2f));
+		manualDiamond3 = new GameObject(GameObject.root(), manualDiamondS, manualDiamondT);
+		manualDiamond3.setLocalTranslation(new Matrix4f().translation(satellite3.satellite.getLocalLocation().x, satellite3.satellite.getLocalLocation().y + 1.0f, satellite3.satellite.getLocalLocation().z));
+		manualDiamond3.setLocalScale(new Matrix4f().scaling(0.2f));
 
 		// add X,Y,-Z axes
 		GameObject x = new GameObject(GameObject.root(), linxS);
@@ -214,9 +224,18 @@ public class MyGame extends VariableFrameRateGame {
 		rc1.addTarget(satellite1.satellite);
 		rc2.addTarget(satellite2.satellite);
 		rc3.addTarget(satellite3.satellite);
+		hc1 = new HideController();
+		hc2 = new HideController();
+		hc3 = new HideController();
+		hc1.addTarget(manualDiamond1);
+		hc2.addTarget(manualDiamond2);
+		hc3.addTarget(manualDiamond3);
 		(engine.getSceneGraph()).addNodeController(rc1);
 		(engine.getSceneGraph()).addNodeController(rc2);
 		(engine.getSceneGraph()).addNodeController(rc3);
+		(engine.getSceneGraph()).addNodeController(hc1);
+		(engine.getSceneGraph()).addNodeController(hc2);
+		(engine.getSceneGraph()).addNodeController(hc3);
 	}
 
 	@Override
@@ -229,7 +248,9 @@ public class MyGame extends VariableFrameRateGame {
 			elapsedTime += deltaTime;
 		}
 		myDolphin.update(deltaTime);
-		manualDiamond.setLocalRotation(new Matrix4f().rotationY((float)elapsedTime));
+		manualDiamond1.setLocalRotation(new Matrix4f().rotationY((float)elapsedTime));
+		manualDiamond2.setLocalRotation(new Matrix4f().rotationY((float)elapsedTime));
+		manualDiamond3.setLocalRotation(new Matrix4f().rotationY((float)elapsedTime));
 		im.update((float)deltaTime);
 		updateSatelliteStates();
 		updatePlayerCoords();
@@ -242,7 +263,9 @@ public class MyGame extends VariableFrameRateGame {
 
 	private void updateSatelliteStates() {
 		MySatellite[] satellites = {satellite1, satellite2, satellite3};
+		GameObject[] manualDiamonds = {manualDiamond1, manualDiamond2, manualDiamond3};
 		RotationController[] rcs = {rc1, rc2, rc3};
+		HideController[] hcs = {hc1, hc2, hc3};
 		float playerDistance;
 
 		for (int i = 0; i < satellites.length; i++) {
@@ -261,6 +284,7 @@ public class MyGame extends VariableFrameRateGame {
 						satellite.setDisarmed(true);
 						hud.incrementScore();
 						rcs[i].toggle();
+						hcs[i].toggle();
 					}
 				}
 			}
