@@ -237,6 +237,13 @@ public class GameObject
 		update();
 	}
 
+	/**Rotates the object around world y-axis */
+	public void globalYaw(float angle)
+	{	Matrix4f rot = new Matrix4f().rotateY(angle);
+		localRotation = rot.mul(localRotation);
+		update();
+	}
+
 	/** Rotates the object around its own x-axis */
 	public void localPitch(float angle)
 	{	localRotation.rotateX(angle);

@@ -24,9 +24,7 @@ public class MyGame extends VariableFrameRateGame {
 	private OverheadCamera overheadCamera;
 	private Plane planeS;
 	private GameObject plane;
-	private RotationController rc1;
-	private RotationController rc2;
-	private RotationController rc3;
+	private RotationController rc1, rc2, rc3;
 	private HideController hc;
 
 	Camera mainCam, overheadCam;
@@ -177,8 +175,8 @@ public class MyGame extends VariableFrameRateGame {
 //		AvatarRotateAction rotateUp = new AvatarRotateAction(this, turnSpeed, true);
 //		AvatarRotateAction rotateDown = new AvatarRotateAction(this, turnSpeed, false);
 
-		// Special action
-		RideDolphinAction rideDolphin = new RideDolphinAction(this, MyDolphin.dol, MyPlayer.player);
+		// Disarm action
+		DisarmAction disarmAction = new DisarmAction(this, MyDolphin.dol);
 
 		// Key bindings
 		associateKeyAction(Component.Identifier.Key.W, moveForwardKb, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
@@ -187,7 +185,7 @@ public class MyGame extends VariableFrameRateGame {
 		associateKeyAction(Component.Identifier.Key.D, turnRightKb, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 //		associateKeyAction(Component.Identifier.Key.UP, rotateUp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 //		associateKeyAction(Component.Identifier.Key.DOWN, rotateDown, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		associateKeyAction(Component.Identifier.Key.SPACE, rideDolphin, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
+		associateKeyAction(Component.Identifier.Key.SPACE, disarmAction, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
 
 		// Gamepad bindings
 		associateGamepadAction(Component.Identifier.Axis.Y, moveGp, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
@@ -255,8 +253,6 @@ public class MyGame extends VariableFrameRateGame {
 
 	private void updateSatelliteStates() {
 		MySatellite[] satellites = {satellite1, satellite2, satellite3};
-		GameObject[] manualDiamonds = {manualDiamond1, manualDiamond2, manualDiamond3};
-		RotationController[] rcs = {rc1, rc2, rc3};
 		float playerDistance;
 
 		for (int i = 0; i < satellites.length; i++) {
@@ -265,22 +261,11 @@ public class MyGame extends VariableFrameRateGame {
 
 			if (playerDistance < 2.5f) {
 				if (!satellite.isDisarmed() && !satellite.isDetonated()) {
-					if (onDolphin) {
-						satellite.setDetonated(true);
-						satellite.setDisarmed(false);
-						hud.setGameOver();
-						hc.toggle();
-						paused = true;
-					} else {
-						satellite.setDetonated(false);
-						satellite.setDisarmed(true);
-						hud.incrementScore();
-						rcs[i].toggle();
-						manualDiamonds[i].setParent(myDolphin.dol);
-						manualDiamonds[i].setLocalTranslation(myDolphin.dol.getLocalTranslation().translation(1f, i * 0.3f + 0.2f, 0));
-						manualDiamonds[i].setLocalScale(new Matrix4f().scaling(0.02f));
-						manualDiamonds[i].propagateTranslation(true);
-					}
+					satellite.setDetonated(true);
+					satellite.setDisarmed(false);
+					hud.setGameOver();
+					hc.toggle();
+					paused = true;
 				}
 			}
 			satellite.setClose(playerDistance < 7.0f);
@@ -307,5 +292,17 @@ public class MyGame extends VariableFrameRateGame {
 
 	public MySatellite getSatellite3() {
 		return satellite3;
+	}
+
+	public MyHUDmanager getHUDmanager() {
+		return hud;
+	}
+
+	public GameObject[] getManualDiamonds() {
+		return new GameObject[] {manualDiamond1, manualDiamond2, manualDiamond3};
+	}
+
+	public NodeController[] getRcs() {
+		return new NodeController[] {rc1, rc2, rc3 };
 	}
 }

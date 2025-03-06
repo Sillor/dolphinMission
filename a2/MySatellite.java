@@ -46,9 +46,9 @@ public class MySatellite {
     private Vector3f generateRandomPosition(float maxDistance, float gap) {
         Random random = new Random();
         return new Vector3f(
-                (random.nextFloat() * 2 - 1) * maxDistance + gap,
+                (random.nextFloat() * 5 - 1) * maxDistance + gap,
                 0.0f,
-                (random.nextFloat() * 2 - 1) * maxDistance + gap
+                (random.nextFloat() * 5 - 1) * maxDistance + gap
         );
     }
 

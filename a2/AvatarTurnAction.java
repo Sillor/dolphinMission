@@ -33,6 +33,6 @@ public class AvatarTurnAction extends AbstractInputAction {
         }
 
         float rotationAmount = turnSpeed * speed * time;
-        av.localYaw(isLeftTurn ? rotationAmount : -rotationAmount);
+        av.globalYaw(isLeftTurn ? rotationAmount : -rotationAmount);
     }
 }
