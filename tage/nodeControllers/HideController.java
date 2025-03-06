@@ -13,11 +13,9 @@ public class HideController extends NodeController {
 
     public void apply(GameObject go) {
         if (go.getTextureImage() != null) {
-            System.out.println("Hiding object");
             scale = go.getLocalScale();
             go.setLocalScale(new Matrix4f().scaling(0.0f));
         } else {
-            System.out.println("Showing object");
             go.setLocalScale(scale);
         }
     }

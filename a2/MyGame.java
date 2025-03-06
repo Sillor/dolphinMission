@@ -27,9 +27,7 @@ public class MyGame extends VariableFrameRateGame {
 	private RotationController rc1;
 	private RotationController rc2;
 	private RotationController rc3;
-	private HideController hc1;
-	private HideController hc2;
-	private HideController hc3;
+	private HideController hc;
 
 	Camera mainCam, overheadCam;
 
@@ -224,18 +222,12 @@ public class MyGame extends VariableFrameRateGame {
 		rc1.addTarget(satellite1.satellite);
 		rc2.addTarget(satellite2.satellite);
 		rc3.addTarget(satellite3.satellite);
-		hc1 = new HideController();
-		hc2 = new HideController();
-		hc3 = new HideController();
-		hc1.addTarget(manualDiamond1);
-		hc2.addTarget(manualDiamond2);
-		hc3.addTarget(manualDiamond3);
+		hc = new HideController();
+		hc.addTarget(myDolphin.dol);
 		(engine.getSceneGraph()).addNodeController(rc1);
 		(engine.getSceneGraph()).addNodeController(rc2);
 		(engine.getSceneGraph()).addNodeController(rc3);
-		(engine.getSceneGraph()).addNodeController(hc1);
-		(engine.getSceneGraph()).addNodeController(hc2);
-		(engine.getSceneGraph()).addNodeController(hc3);
+		(engine.getSceneGraph()).addNodeController(hc);
 	}
 
 	@Override
@@ -265,7 +257,6 @@ public class MyGame extends VariableFrameRateGame {
 		MySatellite[] satellites = {satellite1, satellite2, satellite3};
 		GameObject[] manualDiamonds = {manualDiamond1, manualDiamond2, manualDiamond3};
 		RotationController[] rcs = {rc1, rc2, rc3};
-		HideController[] hcs = {hc1, hc2, hc3};
 		float playerDistance;
 
 		for (int i = 0; i < satellites.length; i++) {
@@ -278,13 +269,17 @@ public class MyGame extends VariableFrameRateGame {
 						satellite.setDetonated(true);
 						satellite.setDisarmed(false);
 						hud.setGameOver();
+						hc.toggle();
 						paused = true;
 					} else {
 						satellite.setDetonated(false);
 						satellite.setDisarmed(true);
 						hud.incrementScore();
 						rcs[i].toggle();
-						hcs[i].toggle();
+						manualDiamonds[i].setParent(myDolphin.dol);
+						manualDiamonds[i].setLocalTranslation(myDolphin.dol.getLocalTranslation().translation(1f, i * 0.3f + 0.2f, 0));
+						manualDiamonds[i].setLocalScale(new Matrix4f().scaling(0.02f));
+						manualDiamonds[i].propagateTranslation(true);
 					}
 				}
 			}
