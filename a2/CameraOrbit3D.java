@@ -44,15 +44,6 @@ public class CameraOrbit3D {
                 new OrbitElevationAction(true), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
         im.associateActionWithAllKeyboards(net.java.games.input.Component.Identifier.Key.J,
                 new OrbitElevationAction(false), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-
-        if (gp != null) {
-            im.associateActionWithAllGamepads(net.java.games.input.Component.Identifier.Axis.X,
-                    new OrbitAzimuthControllerAction(), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-            im.associateActionWithAllGamepads(net.java.games.input.Component.Identifier.Axis.Y,
-                    new OrbitElevationControllerAction(), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-            im.associateActionWithAllGamepads(net.java.games.input.Component.Identifier.Axis.Z,
-                    new OrbitRadiusControllerAction(), InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-        }
     }
 
     public void updateCameraPosition() {
