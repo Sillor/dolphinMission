@@ -11,7 +11,7 @@ import org.joml.Matrix4f;
  * This can be useful for temporarily making objects disappear from the scene
  * without fully removing them from the scene graph.
  *
- * @author [Your Name]
+ * @author Egor Strakhov
  */
 public class HideController extends NodeController {
     private Matrix4f scale;
